@@ -1,0 +1,14 @@
+{
+  "name": "barcode-parser",
+  "version": "1.0.0",
+  "description": "Parses Healthcare Barcodes",
+  "scripts": {
+    "parse": "node src/example.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Opskwan/barcode-parser.git"
+  },
+  "author": "Mike Bates",
+  "type": "module"
+}
