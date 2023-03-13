@@ -7,8 +7,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Opskwan/barcode-parser.git"
+    "url": "git+https://github.com/boymaster/barcode-parser.git"
   },
-  "author": "Mike Bates",
+  "author": "Winton Chen",
   "type": "module"
 }
