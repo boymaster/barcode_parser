@@ -5,6 +5,7 @@ let product = {
   goods_code: '',
   udi_code: '',
   lot_code: '',
+  manu_code: '',
   manu_date: '',
   expiry_date: '',
 };
@@ -84,22 +85,26 @@ const parseHibc = () => {
 
   // Get the primary info
   let primaryArray = primaryCode.split('');
+  if (primaryArray[0] != '$') {
+    product.manu_code = primaryCode.slice(0, 4);
+    // Remove Manufacturer Code
+    primaryArray.splice(0, 4);
 
-  // Remove Manufacturer Code
-  primaryArray.splice(0, 4);
+    // Check digit
+    let checkDigit1 = null;
+    if (doubleBarcode && confirmCheckDigit) {
+      checkDigit1 = primaryArray.pop();
+    }
 
-  // Check digit
-  let checkDigit1 = null;
-  if (doubleBarcode && confirmCheckDigit) {
-    checkDigit1 = primaryArray.pop();
+    // Remove Unit of Use
+    primaryArray.pop();
+
+    // Catalog number - unknown length, so implode the rest of the array
+    product.goods_code = primaryArray.join('');
+  } else {
+    secondaryCode = primaryCode;
   }
 
-  // Remove Unit of Use
-  primaryArray.pop();
-
-  // Catalog number - unknown length, so implode the rest of the array
-  product.goods_code = primaryArray.join('');
-console.log(secondaryCode);
   // Get the secondary info
   if (secondaryCode != '') {
     var pos = 1;
@@ -157,7 +162,7 @@ console.log(secondaryCode);
             if (secondaryCode.substr(curpos, 1) == rule[2]) {
               curpos++;
               // 过期日期
-              product.expire_date = getDateString(secondaryCode.substr(curpos, rule[4]), rule[3]);
+              product.expiry_date = getDateString(secondaryCode.substr(curpos, rule[4]), rule[3]);
               curpos += rule[4];
               // 产品代码
               len = code_len - curpos - 2;
@@ -187,7 +192,7 @@ const parseGs1 = () => {
   var invalidCode = true;
   let ucc_rule = [
       ["00", 18, CODE_TYPE.GOODS_CODE], // 包装代码
-      ["01", 14, CODE_TYPE.UDI_CODE], // 包装代码UDI
+      ["01", 14, CODE_TYPE.UDI_CODE],   // 包装代码UDI
       ["02", 14, CODE_TYPE.GOODS_CODE], // 包装代码
       ["10", 0, CODE_TYPE.LOT_CODE],    // 追溯商品批号
       ["11", 6, CODE_TYPE.MANU_DATE],   // 生产日期 yymmdd

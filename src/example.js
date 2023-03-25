@@ -1,6 +1,7 @@
 import parse from './parse_barcode.mjs';
 
 let product = null;
+
 // Single Barcode
 if (process.argv.length === 3) {
   product = parse(process.argv[2]);
