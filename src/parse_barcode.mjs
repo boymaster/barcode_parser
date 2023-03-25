@@ -3,6 +3,7 @@ let product = {
   barcode_two: '',
   type: 'unsupported',
   goods_code: '',
+  udi_code: '',
   lot_code: '',
   manu_date: '',
   expiry_date: '',
@@ -186,7 +187,7 @@ const parseGs1 = () => {
   var invalidCode = true;
   let ucc_rule = [
       ["00", 18, CODE_TYPE.GOODS_CODE], // 包装代码
-      ["01", 14, CODE_TYPE.GOODS_CODE], // 包装代码UDI
+      ["01", 14, CODE_TYPE.UDI_CODE], // 包装代码UDI
       ["02", 14, CODE_TYPE.GOODS_CODE], // 包装代码
       ["10", 0, CODE_TYPE.LOT_CODE],    // 追溯商品批号
       ["11", 6, CODE_TYPE.MANU_DATE],   // 生产日期 yymmdd
@@ -211,6 +212,12 @@ const parseGs1 = () => {
             if (rule[2] == CODE_TYPE.GOODS_CODE) {
                 product.goods_code = product.barcode_one.substr(pos+2, rule[1]);
                 pos += 2 + rule[1];
+            } else if (rule[2] == CODE_TYPE.UDI_CODE) {
+                product.udi_code = product.barcode_one.substr(pos+2, rule[1]);
+                pos += 2 + rule[1];
+                if (product.goods_code == '') {
+                  product.goods_code = product.udi_code;
+                }
             } else if (rule[2] == CODE_TYPE.LOT_CODE) {
                 var lot_code = product.barcode_one.substr(pos+2);
                 pos += 2 + lot_code.length;
